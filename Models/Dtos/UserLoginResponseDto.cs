@@ -7,7 +7,9 @@ namespace ApiEcommerce.Models.Dtos
 {
     public class UserLoginResponseDto
     {
-        public UserRegisterDto? User { get; set; }
+        //public UserRegisterDto? User { get; set; }
+
+        public UserDataDto? User { get; set; }
 
         public string? Token { get; set; }
 

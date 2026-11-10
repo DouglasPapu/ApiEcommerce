@@ -5,11 +5,17 @@ using ApiEcommerce.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
+using Asp.Versioning;
 
 namespace ApiEcommerce.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    //[ApiVersion("1.0")]
+    //[ApiVersion("2.0")]
+    [ApiVersionNeutral]
+    [Authorize(Roles = "admin")]  
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -26,6 +32,7 @@ namespace ApiEcommerce.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -38,7 +45,7 @@ namespace ApiEcommerce.Controllers
             return Ok(productsDto);
         }
 
-        
+        [AllowAnonymous]
         [HttpGet("{productId:int}", Name = "GetProduct")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -64,7 +71,7 @@ namespace ApiEcommerce.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult CreateProduct([FromBody] CreateProductDto createProductDto)
+        public IActionResult CreateProduct([FromForm] CreateProductDto createProductDto)
         {
             if (createProductDto == null)
             {
@@ -86,6 +93,16 @@ namespace ApiEcommerce.Controllers
 
             var product = _mapper.Map<Product>(createProductDto);
 
+            //Add Image
+            if(createProductDto.Image is not null)
+            {
+                UploadProductImage(createProductDto, product);
+            }
+            else
+            {
+                product.ImgUrl = "https://placehold.co/600x400";
+            }
+
             if(!_productRepository.CreateProduct(product))
             {
                 ModelState.AddModelError("CustomError", $"Something went wrong when saving the record {createProductDto.Name}");
@@ -97,7 +114,6 @@ namespace ApiEcommerce.Controllers
 
             return CreatedAtRoute("GetProduct", new { productId = product.ProductId }, productDto);
         }
-
 
         [HttpGet("searchProductsByCategory/{categoryId:int}", Name = "GetProductsByCategory")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -188,7 +204,7 @@ namespace ApiEcommerce.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult UpdateProduct(int productId, [FromBody] UpdateProductDto updateProductDto)
+        public IActionResult UpdateProduct(int productId, [FromForm] UpdateProductDto updateProductDto)
         {
             if (updateProductDto == null)
             {
@@ -210,6 +226,17 @@ namespace ApiEcommerce.Controllers
 
             var product = _mapper.Map<Product>(updateProductDto);
             product.ProductId = productId;
+            
+
+            //Add Image
+            if(updateProductDto.Image is not null)
+            {
+                UploadProductImage(updateProductDto, product);
+            }
+            else
+            {
+                product.ImgUrl = "https://placehold.co/600x400";
+            }
 
 
             if(!_productRepository.UpdateProduct(product))
@@ -220,8 +247,7 @@ namespace ApiEcommerce.Controllers
 
             return NoContent();
         }
-
-                
+              
         [HttpDelete("{productId:int}", Name = "DeleteProduct")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -255,6 +281,32 @@ namespace ApiEcommerce.Controllers
             }
 
             return NoContent();
+        }
+
+
+        private void UploadProductImage(dynamic productDto, Product product)
+        {
+            string fileName = product.ProductId + Guid.NewGuid().ToString() + Path.GetExtension(productDto.Image.FileName);
+            var imagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwwroot", "ProductsImages");
+
+            if (!Directory.Exists(imagesFolder))
+            {
+                Directory.CreateDirectory(imagesFolder);
+            }
+
+            var filePath = Path.Combine(imagesFolder, fileName);
+            FileInfo file = new FileInfo(filePath);
+
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            productDto.Image.CopyTo(fileStream);
+            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+            product.ImgUrl = $"{baseUrl}/ProductsImages/{fileName}";
+            product.ImgUrlLocal = filePath;
         }
     }
 }

@@ -1,0 +1,260 @@
+{
+  "info": {
+    "_postman_id": "fed4ef4c-5dec-430c-b0c0-1f0f27d763d3",
+    "name": "Api - Ecommerce",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "11336230",
+    "_collection_link": "https://go.postman.co/collection/11336230-fed4ef4c-5dec-430c-b0c0-1f0f27d763d3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "Listado de Categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5215/api/Category",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "Category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5215/api/Category/1\n",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "Category",
+                "1\n"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Categoría",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJ1c2VybmFtZSI6ImRldmktMjAyOSIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc5MzgyNjc1NiwiZXhwIjoxNzkzODMzOTU2LCJpYXQiOjE3OTM4MjY3NTZ9.lYHg201uMGqGrvXosUNBn-2qPr5M5GEmgskhKivHlUk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Herramientas\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5215/api/Category",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "Category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar Categoría",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJ1c2VybmFtZSI6ImRldmktMjAyOSIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc5MzgyNjc1NiwiZXhwIjoxNzkzODMzOTU2LCJpYXQiOjE3OTM4MjY3NTZ9.lYHg201uMGqGrvXosUNBn-2qPr5M5GEmgskhKivHlUk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Tecnología\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5215/api/Category/1002",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "Category",
+                "1002"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Categoría",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJ1c2VybmFtZSI6ImRldmktMjAyOSIsInJvbGUiOiJBZG1pbiIsIm5iZiI6MTc5MzgyNjc1NiwiZXhwIjoxNzkzODMzOTU2LCJpYXQiOjE3OTM4MjY3NTZ9.lYHg201uMGqGrvXosUNBn-2qPr5M5GEmgskhKivHlUk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Herramientas2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5215/api/Category/1002",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "Category",
+                "1002"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Creación de Usuarios",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"devi-2029\",\n  \"name\": \"Devi develop\",\n  \"password\": \"123456\",\n  \"role\": \"Admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5215/api/User",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "User"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5215/api/User",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "User"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"devi-2029\",\n  \"password\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5215/api/User/Login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5215",
+              "path": [
+                "api",
+                "User",
+                "Login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

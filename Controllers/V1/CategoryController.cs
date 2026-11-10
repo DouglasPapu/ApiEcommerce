@@ -2,12 +2,19 @@ using ApiEcommerce.Models;
 using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.IRepository;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using ApiEcommerce.Constants;
+using Microsoft.AspNetCore.Authorization;
+using Asp.Versioning;
 
-namespace ApiEcommerce.Controllers;
+namespace ApiEcommerce.Controllers.V1;
 
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 [ApiController]
+[EnableCors(PolicyNames.ALLOW_SPECIFIC_ORIGIN)]
+[Authorize(Roles = "Admin")]
 public class CategoryController : ControllerBase
 {
 
@@ -21,9 +28,12 @@ public class CategoryController : ControllerBase
         _mapper = mapper;
     }
 
+    [AllowAnonymous] //permite ver las categorias ignorando el autorize.
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[EnableCors(PolicyNames.ALLOW_SPECIFIC_ORIGIN)]
+    [Obsolete("This method is obsolete. Use GetCategoriesById of the version 2 instead")]
     public IActionResult GetCategories()
     {
         var categories = _categoryRepository.GetCategories();
@@ -38,14 +48,19 @@ public class CategoryController : ControllerBase
         return Ok(categoriesDto);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}", Name = "GetCategory")]
+    //[ResponseCache(Duration = 10)]
+    [ResponseCache(CacheProfileName = CacheProfiles.DEFAULT_10)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult GetCategory(int id)
     {
+        System.Console.WriteLine($"Category with ID {id} a las {DateTime.Now}");
         var category = _categoryRepository.GetCategory(id);
+        System.Console.WriteLine($"Answer with ID {id}");
 
         if (category == null)
         {
