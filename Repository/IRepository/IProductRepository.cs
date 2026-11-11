@@ -5,6 +5,8 @@ namespace ApiEcommerce.Repository.IRepository
     public interface IProductRepository
     {
         public ICollection<Product> GetAllProducts();
+        public ICollection<Product> GetProductsInPages(int pageNumber, int pageSize);
+        public int GetTotalProducts();
 
         public ICollection<Product> GetProductsByCategory(int categoryId);
 

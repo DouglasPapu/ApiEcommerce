@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Authorization;
 using Asp.Versioning;
+using ApiEcommerce.Models.Dtos.Responses;
 
 namespace ApiEcommerce.Controllers
 {
@@ -15,7 +16,7 @@ namespace ApiEcommerce.Controllers
     //[ApiVersion("1.0")]
     //[ApiVersion("2.0")]
     [ApiVersionNeutral]
-    [Authorize(Roles = "admin")]  
+    [Authorize(Roles = "Admin")]  
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -282,6 +283,43 @@ namespace ApiEcommerce.Controllers
 
             return NoContent();
         }
+
+
+        [AllowAnonymous]
+        [HttpGet("Paged", Name = "GetProductsInPage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public IActionResult GetProductsInPage([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+            {
+                return BadRequest("Paraneters of pagination are invalid");
+            }
+
+            var totalProducts = _productRepository.GetTotalProducts();
+            var totalPages = (int) Math.Ceiling((double)totalProducts / pageSize);
+
+            if (pageNumber > totalPages)
+            {
+                return NotFound("There aren't pages available.");
+            }
+
+            var products = _productRepository.GetProductsInPages(pageNumber, pageSize);
+            var productDto = _mapper.Map<List<ProductDto>>(products);
+
+            var paginationResponse = new PaginationResponse<ProductDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                Items = productDto
+            };
+
+            return Ok(paginationResponse);
+        }
+
 
 
         private void UploadProductImage(dynamic productDto, Product product)

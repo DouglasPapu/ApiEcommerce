@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Añade la configuración para usar el ORM EFCore de .NET. Por tanto las migraciones, etc.
 var dbConnectionString = builder.Configuration.GetConnectionString("ConexionSql");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(dbConnectionString));
+builder.Services.AddDataBaseConfiguration(dbConnectionString);
 
 
 //Añadir configuración para CACHÉ Middleware.
