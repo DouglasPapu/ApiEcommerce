@@ -1,7 +1,7 @@
 using ApiEcommerce.Models;
 using ApiEcommerce.Models.Dtos;
 using ApiEcommerce.Repository.IRepository;
-using AutoMapper;
+using Mapster;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ApiEcommerce.Constants;
@@ -20,12 +20,9 @@ public class CategoryController : ControllerBase
 
     private readonly ICategoryRepository _categoryRepository;
 
-    private readonly IMapper _mapper;
-
-    public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
+    public CategoryController(ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;
-        _mapper = mapper;
     }
 
     [AllowAnonymous] //permite ver las categorias ignorando el autorize.
@@ -42,7 +39,7 @@ public class CategoryController : ControllerBase
 
         foreach (var category in categories)
         {
-            categoriesDto.Add(_mapper.Map<CategoryDto>(category));
+            categoriesDto.Add(category.Adapt<CategoryDto>());
         }
 
         return Ok(categoriesDto);
@@ -67,7 +64,7 @@ public class CategoryController : ControllerBase
             return NotFound($"Category with ID {id} not found.");
         }
 
-        var categoryDto = _mapper.Map<CategoryDto>(category);
+        var categoryDto = category.Adapt<CategoryDto>();
 
         return Ok(categoryDto);
     }
@@ -92,7 +89,7 @@ public class CategoryController : ControllerBase
             return StatusCode(400, ModelState);
         }
 
-        var category = _mapper.Map<Category>(categoryDto);
+        var category = categoryDto.Adapt<Category>();
 
         if(!_categoryRepository.CreateCategory(category))
         {
@@ -130,7 +127,7 @@ public class CategoryController : ControllerBase
             return StatusCode(400, ModelState);
         }
 
-        var category = _mapper.Map<Category>(updateCategoryDto);
+        var category = updateCategoryDto.Adapt<Category>();
         category.Id = id;
 
         if (!_categoryRepository.UpdateCategory(category))

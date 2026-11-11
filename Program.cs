@@ -6,6 +6,7 @@ using ApiEcommerce.Extensions;
 using ApiEcommerce.Repository;
 using ApiEcommerce.Repository.IRepository;
 using Asp.Versioning;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,7 @@ builder.Services.AddResponseCaching(options =>
 builder.Services.AddRepositoriesConfiguration();
 
 //Maps, para el mapeo de DTOs a entidades (viceversa)
-builder.Services.AddAutoMapper(cfg => 
-{
-    cfg.AddMaps(typeof(Program).Assembly);
-});
+TypeAdapterConfig.GlobalSettings.Scan(typeof(Program).Assembly);
 
 
 //Configuration Identity Core to add security to users
